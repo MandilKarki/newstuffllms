@@ -1,0 +1,197 @@
+import re
+
+def remove_disclaimer(text):
+    # Define a pattern for the disclaimer
+    pattern = "(This\s(e-?)?mail(\s(is)?\s(intended)?)?.*(confidential|privileged|property))"
+    
+    # Substitute the pattern with an empty string
+    text = re.sub(pattern, '', text, flags=re.IGNORECASE|re.DOTALL)
+            
+    return text
+
+df['body'] = df['body'].apply(remove_disclaimer)
+
+
+import re
+
+def remove_disclaimer(text):
+    # Define a pattern for the disclaimer
+    pattern = "(This\s(e-?)?mail(\s(is)?\s(intended)?)?.*(confidential|privileged|property|If you received this e-?mail in error))"
+    
+    # Substitute the pattern with an empty string
+    text = re.sub(pattern, '', text, flags=re.IGNORECASE|re.DOTALL)
+            
+    return text
+
+df['body'] = df['body'].apply(remove_disclaimer)
+
+
+
+import re
+
+def remove_disclaimer(text):
+    # Define a pattern for the disclaimer
+    pattern = "(This\s(e-?)?mail(\s(is)?\s(intended)?)?.*(confidential|privileged|property|If you received this e-?mail in error|the information contained in this e-?mail))"
+    
+    # Substitute the pattern with an empty string
+    text = re.sub(pattern, '', text, flags=re.IGNORECASE|re.DOTALL)
+            
+    return text
+
+df['body'] = df['body'].apply(remove_disclaimer)
+
+
+
+import re
+
+def remove_disclaimer(text):
+    # Define a pattern for the disclaimer
+    pattern = "(This\s(e-?)?mail(\s(is)?\s(intended)?)?.*(confidential|privileged|property|If you received this e-?mail in error|the information contained in this e-?mail|this email was sent to you))"
+    
+    # Substitute the pattern with an empty string
+    text = re.sub(pattern, '', text, flags=re.IGNORECASE|re.DOTALL)
+            
+    return text
+
+df['body'] = df['body'].apply(remove_disclaimer)
+
+
+import re
+
+def remove_disclaimer(text):
+    # Define a pattern for the disclaimer
+    pattern = "(This\s(e-?)?mail.*?(\.|\n)|This\s(e-?)?mail\s(is)?\s(intended)?.*?(\.|\n)|Confidential.*?(\.|\n)|Privileged.*?(\.|\n)|Property.*?(\.|\n))"
+    
+    # Substitute the pattern with an empty string
+    text = re.sub(pattern, '', text, flags=re.IGNORECASE|re.DOTALL)
+    
+    # Other disclaimer patterns can be added similarly 
+    return text
+
+df['body'] = df['body'].apply(remove_disclaimer)
+
+
+import re
+
+def remove_disclaimer(text):
+    # Define a pattern for the disclaimer
+    disclaimer_patterns = [
+        "This\s(e-?)?mail.*?(\.|\n)",
+        "This\s(e-?)?mail\s(is)?\s(intended)?.*?(\.|\n)",
+        "Confidential.*?(\.|\n)",
+        "Privileged.*?(\.|\n)",
+        "Property.*?(\.|\n)",
+        # ...add other patterns here...
+    ]
+    
+    # Compile all patterns into one
+    pattern = "(" + "|".join(disclaimer_patterns) + ")"
+    
+    # Separate the email into a main part and a potential disclaimer part
+    main_part, _, potential_disclaimer = text.rpartition("\n\n")
+    
+    # Check if the potential disclaimer matches our pattern
+    if re.match(pattern, potential_disclaimer, flags=re.IGNORECASE|re.DOTALL):
+        # If it does, remove it
+        text = main_part
+    
+    return text
+
+df['body'] = df['body'].apply(remove_disclaimer)
+
+
+import re
+
+def remove_disclaimer(text):
+    disclaimer_patterns = [
+        "This\s(e-?)?mail.*?(\.|\n)",
+        "This\s(e-?)?mail\s(is)?\s(intended)?.*?(\.|\n)",
+        "Confidential.*?(\.|\n)",
+        "Privileged.*?(\.|\n)",
+        "Property.*?(\.|\n)",
+        # ...add other patterns here...
+    ]
+    
+    pattern = "(" + "|".join(disclaimer_patterns) + ")"
+    
+    main_part, _, potential_disclaimer = text.rpartition("\n\n")
+    
+    if re.match(pattern, potential_disclaimer, flags=re.IGNORECASE|re.DOTALL):
+        text = main_part
+    
+    return text
+
+# Example email with a disclaimer
+email = """
+Hello,
+
+This is an important message.
+
+Regards,
+Sender
+
+----------------
+Confidentiality Notice: This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error please notify the sender.
+"""
+
+# Apply the function
+clean_email = remove_disclaimer(email)
+
+print(clean_email)
+
+
+import re
+
+def remove_disclaimer(text):
+    disclaimer_patterns = [
+        "This\s(e-?)?mail.*?(\.|\n)",
+        "This\s(e-?)?mail\s(is)?\s(intended)?.*?(\.|\n)",
+        "Confidential.*?(\.|\n)",
+        "Privileged.*?(\.|\n)",
+        "Property.*?(\.|\n)",
+        # ...add other patterns here...
+    ]
+    
+    pattern = "(" + "|".join(disclaimer_patterns) + ")"
+    
+    # Separate the email into a main part and a potential disclaimer part
+    # Here we split by an empty line, a line of dashes, or a line of equal signs
+    parts = re.split("\n\n|^-+$|^=+$", text, flags=re.MULTILINE)
+    if len(parts) > 1:
+        main_parts, potential_disclaimer = parts[:-1], parts[-1]
+        
+        # Check if the potential disclaimer matches our pattern
+        if re.match(pattern, potential_disclaimer, flags=re.IGNORECASE|re.DOTALL):
+            # If it does, remove it
+            text = "\n\n".join(main_parts)
+    
+    return text
+
+# Example email with a disclaimer
+email = """
+Hello,
+
+This is an important message.
+
+Regards,
+Sender
+
+----------------
+Confidentiality Notice: This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error please notify the sender.
+"""
+
+# Apply the function
+clean_email = remove_disclaimer(email)
+
+print(clean_email)
+
+import pandas as pd
+
+# Load your csv into a DataFrame
+df = pd.read_csv('your_file.csv')
+
+# Apply the function to the 'body' column
+df['clean_body'] = df['body'].apply(remove_disclaimer)
+
+# Save the result to a new csv file
+df.to_csv('cleaned_emails.csv', index=False)
