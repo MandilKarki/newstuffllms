@@ -316,3 +316,78 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-12b", padding_side="left")
 model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-12b", device_map="auto", torch_dtype=torch.bfloat16)
 generate_text = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
+
+
+
+
+
+
+##############################################
+
+import re
+
+def remove_disclaimer(email: str, disclaimer_starts: list) -> str:
+    """Remove the disclaimer from the email."""
+    # Create a list of regular expressions for each disclaimer start phrase
+    disclaimer_patterns = [re.escape(start) for start in disclaimer_starts]
+    # Join the list into a single regex pattern
+    disclaimer_pattern = '|'.join(disclaimer_patterns)
+    # Add the optional prefixes to the pattern
+    disclaimer_pattern = r"(.*?)(\n\s*\n|-\s*-|" + disclaimer_pattern + ")"
+    # Find the disclaimer start
+    match = re.match(disclaimer_pattern, email, flags=re.S | re.I)
+    if match:
+        # If a disclaimer start was found, return the text before it
+        return match.group(1)
+    else:
+        # If no disclaimer start was found, return the original email
+        return email
+
+    disclaimer_starts = [
+    "This email",
+    "This e-mail",
+    "This mail is intended",
+    "This email is intended",
+    "Confidential",
+    "Privileged",
+    "Property",
+    "If you have received this email in error",
+    "The information contained in the email",
+    "This email was sent to you"
+]
+
+df['clean_body'] = df['body'].apply(lambda x: remove_disclaimer(x, disclaimer_starts))
+
+
+import pandas as pd
+
+# disclaimer_starts is your list of disclaimer start phrases
+disclaimer_starts = [
+    "This email",
+    "This e-mail",
+    "This mail is intended",
+    "This email is intended",
+    "Confidential",
+    "Privileged",
+    "Property",
+    "If you have received this email in error",
+    "The information contained in the email",
+    "This email was sent to you"
+]
+
+# Calculate raw word count
+raw_word_count = sum(len(email.split()) for email in df['body'])
+
+# Apply the remove_disclaimer function to each email in the 'body' column
+df['clean_body'] = df['body'].apply(lambda x: remove_disclaimer(x, disclaimer_starts))
+
+# Calculate cleaned word count
+cleaned_word_count = sum(len(email.split()) for email in df['clean_body'])
+
+print(f"Raw Word Count: {raw_word_count}")
+print(f"Cleaned Word Count: {cleaned_word_count}")
+print(f"Reduction: {raw_word_count - cleaned_word_count}")
+
+
+
+
