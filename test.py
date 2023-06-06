@@ -195,3 +195,42 @@ df['clean_body'] = df['body'].apply(remove_disclaimer)
 
 # Save the result to a new csv file
 df.to_csv('cleaned_emails.csv', index=False)
+
+
+
+
+
+import pandas as pd
+import re
+
+def remove_disclaimer(text):
+    disclaimer_patterns = [
+        "This\s(e-?)?mail.*?(\.|\n)",
+        "This\s(e-?)?mail\s(is)?\s(intended)?.*?(\.|\n)",
+        "Confidential.*?(\.|\n)",
+        "Privileged.*?(\.|\n)",
+        "Property.*?(\.|\n)",
+        "(If\syou\sreceived|received\sthis).*?(\.|\n)",  # updated pattern
+        # ...add other patterns here...
+    ]
+    
+    pattern = "(" + "|".join(disclaimer_patterns) + ")"
+    
+    parts = re.split("\n\n|^-+$|^=+$", text, flags=re.MULTILINE)
+    if len(parts) > 1:
+        main_parts, potential_disclaimer = parts[:-1], parts[-1]
+        
+        if re.match(pattern, potential_disclaimer, flags=re.IGNORECASE|re.DOTALL):
+            text = "\n\n".join(main_parts)
+    
+    return text
+
+# Load your csv into a DataFrame
+df = pd.read_csv('your_file.csv')
+
+# Create a copy of the DataFrame
+new_df = df.copy()
+
+# Apply the function to the 'body' column in the new DataFrame
+new_df['body'] = new_df['body'].apply(remove_disclaimer)
+
