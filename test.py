@@ -234,3 +234,32 @@ new_df = df.copy()
 # Apply the function to the 'body' column in the new DataFrame
 new_df['body'] = new_df['body'].apply(remove_disclaimer)
 
+
+import pandas as pd
+import re
+
+def remove_disclaimer(text):
+    disclaimer_patterns = [
+        "This\s(e-?)?mail.*?(\.|\n)",
+        "This\s(e-?)?mail\s(is)?\s(intended)?.*?(\.|\n)",
+        "Confidential.*?(\.|\n)",
+        "Privileged.*?(\.|\n)",
+        "Property.*?(\.|\n)",
+        "(If\syou\sreceived|received\sthis|This e-?mail).*?(\.|\n)",  # broadened pattern
+        # ...add other patterns here...
+    ]
+    
+    pattern = "(" + "|".join(disclaimer_patterns) + ")"
+    
+    parts = re.split("\n\n|^-+$|^=+$", text, flags=re.MULTILINE)
+    if len(parts) > 1:
+        main_parts, potential_disclaimer = parts[:-1], parts[-1]
+
+        print(f"Before:\n{potential_disclaimer}\n")  # print potential disclaimer before removal
+        
+        if re.search(pattern, potential_disclaimer, flags=re.IGNORECASE|re.DOTALL):
+            text = "\n\n".join(main_parts)
+
+        print(f"After:\n{text}\n")  # print text after removal
+    
+    return text
