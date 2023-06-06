@@ -288,3 +288,31 @@ def remove_disclaimer(text):
             text = "\n\n".join(main_parts)
     
     return text
+
+
+#############################
+fast api
+from fastapi import FastAPI
+from pydantic import BaseModel
+from model import generate_text
+
+app = FastAPI()
+
+class Item(BaseModel):
+    text: str
+
+@app.post('/predict')
+def predict(item: Item):
+    output = generate_text(item.text)
+    return {'result': output}
+
+
+load model
+
+import torch
+from instruct_pipeline import InstructionTextGenerationPipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-12b", padding_side="left")
+model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-12b", device_map="auto", torch_dtype=torch.bfloat16)
+generate_text = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
