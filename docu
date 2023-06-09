@@ -1,0 +1,58 @@
+Project Overview and Documentation
+Project Summary:
+
+The goal of this project was to build a text generation model that could classify emails as either 'risky' or 'not risky'. The project was conducted with three different transformer-based models: Dolly13b, Guacano, and Bloom2B. These models were used for few-shot prompting, using prompts engineered for the specific task.
+Model Selection:
+
+The models chosen for this task - Dolly13b, Guacano, and Bloom2B, are all transformer-based models suitable for language understanding tasks. We decided to use these models due to their vast knowledge and capability to understand context in text, especially when the size of the training data is limited.
+Inference Time:
+
+Inference times of each model were noted for performance comparison. These times may vary depending on the input size, hardware capabilities, and model complexity.
+Prompt Engineering:
+
+Prompt engineering was a key aspect of this project. Prompts guide the model towards the desired output and act as an instruction set for the model. A good prompt can drastically improve model performance, especially in few-shot scenarios. We tailored the prompts for the specific task of classifying emails, with static components that set the context and dynamic parts consisting of the emails to be classified.
+Few-shot Prompting:
+
+Few-shot prompting is a technique in which a model is provided with a few examples of the task at hand at inference time. This technique works especially well with large transformer models, which already have significant knowledge of language and can generalize well from a few examples.
+Labels:
+
+The task at hand was binary classification, with the labels being 'risky' and 'not risky'. Emails were classified based on the content, context, and possible threats they might contain.
+Code & Architecture:
+
+Our codebase is divided into modular components that interact with each other. It consists of a TextGenerator class that handles the model loading and inference, a PromptManager class that manages prompt engineering, and an API endpoint that uses FastAPI to serve the model.
+
+We designed a pipeline where the incoming email is appended with a prompt to guide the model's output, then passed to the TextGenerator model to produce a text that contains the classification label. Regular expressions are then used to extract the classification label from the generated text.
+NLP Service API:
+
+We created a FastAPI based API service that accepts an email as input and returns the email's classification. The API is designed to be scalable, allowing for future improvements and additional features. The output can be easily integrated into other services or stored as part of a CSV file.
+Future Work and Improvements:
+
+    Experiment with different prompts to improve model performance.
+    Test the API under different network conditions to ensure stability.
+    Try out more models and compare their performance.
+    Further modularize the code to allow for easy swapping of different components.
+
+In conclusion, this project was a practical implementation of using transformer models for text generation and classification tasks, showing how prompts can guide the model to the desired output. It lays the groundwork for future enhancements and potential integrations into other projects and services.
+User
+now explain how this can be used in used with other projects, how this can be used in the CAT project and it would generate a new data of email contents to already exisitng datasets and pipelines and procssess
+ChatGPT
+
+Integration into Other Projects:
+
+This text classification model can be easily integrated into various projects or systems that require understanding and classification of email content. The model's output can be used as an additional feature for other machine learning models, or can be directly used in decision-making processes.
+
+Usage in CAT Project:
+
+The Contextualized Attention-based Transformers (CAT) Project can utilize this classification model in numerous ways.
+
+    Augmenting existing data: As emails are classified as 'risky' or 'not risky', this information can be added to the existing datasets as a new feature. This label can be particularly useful in models that need to predict or understand the risk associated with particular emails. It adds an extra dimension to the dataset, enriching it with information that is derived from a sophisticated understanding of language and context.
+
+    Improving pipelines and processes: The classifier can be integrated into existing data pipelines. For instance, incoming emails could be automatically classified, and based on this classification, they can be channeled into different subsequent pipelines (e.g., alerting the appropriate team about a risky email or moving non-risky emails to the next stage of processing).
+
+    Data preprocessing: Before feeding data into the CAT project models, the classification of emails can be used to filter out 'risky' emails or to apply different preprocessing steps based on the classification.
+
+    Enhancing the model's understanding: If the CAT Project's model needs to understand the concept of 'risk' in emails, the classification output from our model can be used to further train the CAT model, enhancing its understanding of what constitutes a 'risky' and a 'not risky' email.
+
+By generating a new data column of email classifications, the CAT project will be able to take this new contextual information into account when processing emails. This added feature could potentially improve the accuracy and performance of the existing models and pipelines in the CAT project, especially those that revolve around risk identification and management.
+
+These are just a few examples of how this email classification model could be utilized. The actual implementation would, of course, depend on the specific requirements and constraints of the CAT project.
