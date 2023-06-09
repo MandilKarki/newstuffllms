@@ -20,3 +20,12 @@ def extract_zip_file(zip_filepath, destination_path):
 zip_filepath = 'C:/Mandil/emailer/AI_Chatbot_In_Python_With_Source_Code.zip'  # Replace with the path to your zip file
 destination_path = 'C:/Mandil/emailer'  # Replace with the path where you want to extract the zip
 extract_zip_file(zip_filepath, destination_path)
+
+
+
+# define a function to convert dictionary to string
+def convert_dict(d):
+    return str(d).strip('{}').replace('\'', '').replace('\"', '')
+
+# apply the function to the column
+df['dict_column'] = df['dict_column'].apply(convert_dict)
