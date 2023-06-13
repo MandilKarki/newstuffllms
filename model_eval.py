@@ -148,3 +148,20 @@ if __name__ == "__main__":
     output_file = "output_data.csv"  
     main(csv_file, output_file)
 
+    def classify_email(email, model, tokenizer):
+   
+    input_ids = tokenizer.encode(instruction + preprocessed_email, return_tensors="pt")
+    sequences = pipeline(
+        input_ids=input_ids,
+        max_length=len(input_ids[0]) + 40,
+        do_sample=True,
+        top_k=10,
+        num_return_sequences=1,
+        eos_token_id=tokenizer.eos_token_id,
+    )
+    
+    generated_text = sequences[0]["generated_text"]
+    final_result = generated_text.split(":")[-1].strip()
+    
+    return final_result
+
