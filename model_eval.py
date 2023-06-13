@@ -242,3 +242,38 @@ This code incorporates the following changes:
      # Extract the classification from generated text (text after "Classification:")
         classification = generated_text.split("Classification:")[-1].strip()
         return classification
+    
+    
+    
+    def main(emails):
+    model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto", llm_int8_enable_fp32_cpu_offload=True).to(device)
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+    results = []
+
+    for email in emails:
+        processed_email = preprocess_email(email, disclaimer_starts)
+        classification = classify_email(processed_email, model, tokenizer)
+        results.append(classification)
+
+    return results
+
+if __name__ == "__main__":
+    emails = ["email1", "email2", "email3", "email4"]  # Replace with your list of emails
+
+    disclaimer_starts = [
+        "This email",
+        "This e-mail",
+        "This mail is intended",
+        "This email is intended",
+        "Confidential",
+        "Privileged",
+        "Property"
+    ]
+
+    device = "cuda" if torch.cuda.is_available() else "cpu"  # Use GPU if available
+    model_id = "C:/LLM/quantised_bloom/"  # Replace with your model path
+
+    results = main(emails)
+    print(results)
+
