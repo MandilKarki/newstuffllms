@@ -236,3 +236,9 @@ This code incorporates the following changes:
     Running the model on a GPU if one is available.
     Applying the classifier function to all emails at once using Pandas' apply function, which is typically faster than a Python loop.
     Ensuring the length of the generated sequence doesn't exceed the model's maximum
+    
+    
+    
+     # Extract the classification from generated text (text after "Classification:")
+        classification = generated_text.split("Classification:")[-1].strip()
+        return classification
