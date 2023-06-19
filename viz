@@ -1,0 +1,26 @@
+def create_visualizations(df):
+    # Plot distribution of classifications
+    df['classification_body'].value_counts().plot(kind='bar')
+    plt.title('Distribution of Classifications')
+    plt.xlabel('Classification')
+    plt.ylabel('Count')
+    plt.show()
+
+    # Generate word clouds for suspicious and not suspicious emails
+    suspicious_text = ' '.join(df.loc[df['classification_body'] == 'Suspicious', 'body'].values)
+    not_suspicious_text = ' '.join(df.loc[df['classification_body'] == 'Not Suspicious', 'body'].values)
+
+    wordcloud_suspicious = WordCloud(background_color='white').generate(suspicious_text)
+    wordcloud_not_suspicious = WordCloud(background_color='white').generate(not_suspicious_text)
+
+    # Plot word cloud for suspicious emails
+    plt.imshow(wordcloud_suspicious, interpolation='bilinear')
+    plt.title('Word Cloud for Suspicious Emails')
+    plt.axis("off")
+    plt.show()
+
+    # Plot word cloud for not suspicious emails
+    plt.imshow(wordcloud_not_suspicious, interpolation='bilinear')
+    plt.title('Word Cloud for Not Suspicious Emails')
+    plt.axis("off")
+    plt.show()
