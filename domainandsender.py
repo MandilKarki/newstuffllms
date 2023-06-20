@@ -23,3 +23,23 @@ def is_sent_to_competitor(sender_email, receiver_emails, competitor_domains):
             return False
 
     return False
+
+
+import csv
+import difflib
+
+def is_sent_to_competitor(sender_email, receiver_emails, competitor_domains):
+    # Check if the sender email domain is in the competitor domains
+    sender_domain = sender_email.split('@')[1].lower()
+    if sender_domain in competitor_domains:
+        return True
+    
+    # Check if any of the receiver emails are in the competitor domains
+    for receiver_email in receiver_emails:
+        receiver_domain = receiver_email.split('@')[1].lower()
+        if receiver_domain in competitor_domains:
+            return True
+    
+    return False
+
+# Rest of the code remains the same...
