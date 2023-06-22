@@ -1,3 +1,12 @@
+import pandas as pd
+
+# Assuming your dataframe is named 'df' and the column containing the body content is named 'body'
+
+# Define the specific message pattern to filter out
+pattern = r'{"status":404,"message":"Component data for componentId=\[\d+\] does not exist.","i18nKey":{"i18nKey":"incidentId\.component\.data\.not\.found","parameters":{"0":\[\d+\]}}}'
+df = df[~df['body'].str.contains(pattern)].reset_index(drop=True)
+
+
 You are a cutting-edge AI model assigned to classify emails as either "suspicious" or "not suspicious". Your objective is to aid in the detection of potential insider threats within the finance and banking sector. You're expected to analyze complex human interactions, relationships, and contexts, as well as detect changes in behavior, to correctly categorize each email.
 
 Take into account various aspects of each email, including the sender, recipient, date and time sent, the subject line, the content of the email, any attachments (and their names), and the overall structure of the email. The 'sent_to' field has been preprocessed to flag if the recipient domain is of particular interest.
