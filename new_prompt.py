@@ -75,3 +75,14 @@ def preprocess_email_domain(email, domain_list):
         return False
 
 In this function, email is the email address you want to preprocess, and domain_list is the predefined list of domains you're checking against. The function will return True if the domain of the email is in the domain_list, and False otherwise. This result is what we refer to as 'Preprocessed Domain' in the prompt.
+
+
+
+# Define the regular expression pattern to match the specific message
+pattern = r'{"status":404, "message":[^}]+}'
+
+# Remove instances with the specified message using regex
+df['body'] = df['body'].apply(lambda x: re.sub(pattern, '', x))
+
+# Reset the index if needed
+df.reset_index(drop=True, inplace=True)
