@@ -86,3 +86,17 @@ df['body'] = df['body'].apply(lambda x: re.sub(pattern, '', x))
 
 # Reset the index if needed
 df.reset_index(drop=True, inplace=True)
+
+
+
+import pandas as pd
+import re
+
+# Assuming your dataframe is named 'df' and the column containing the body content is named 'body'
+
+# Define the regular expression pattern to match the specific message
+pattern = r'\{"status":404, "message":\s*\{[^}]*"i18nKey":[^}]*,"parameters":[^}]*\}\}'
+
+# Remove rows with the specified message pattern from the dataframe
+df = df[~df['body'].str.contains(pattern)].reset_index(drop=True)
+
