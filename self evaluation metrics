@@ -1,0 +1,31 @@
+from sklearn.metrics import classification_report, confusion_matrix
+import pandas as pd
+
+# Assuming your DataFrame 'df' has two columns: 'true_label' and 'predicted_label'
+
+# Extract the true labels and the predicted labels from your DataFrame
+true_labels = df['true_label']
+predictions = df['predicted_label']
+
+# Now, you can calculate and print the classification report and confusion matrix
+print("Classification Report:")
+print(classification_report(true_labels, predictions))
+
+print("Confusion Matrix:")
+print(confusion_matrix(true_labels, predictions))
+
+
+
+def classify_text(text):
+    text = str(text).lower().strip()  # Convert to string, make lower case, and remove leading/trailing spaces
+    if 'not suspicious' in text:
+        return 0
+    elif 'suspicious' in text:
+        return 1
+    else:
+        return None  # Or any default value you want for labels that do not contain either "suspicious" or "not suspicious"
+
+df['classification_binary'] = df['classification'].apply(classify_text)
+
+# Print the dataframe to check the result
+print(df)
