@@ -93,8 +93,44 @@ print(df
 
 # df['cleaned_body'] = df['body'].apply(clean_email)
 
-      import pandas as pd
-import re
+#       import pandas as pd
+# import re
+
+# def clean_email_body(body):
+#     # Replace new line characters and following text until space
+#     body = re.sub("\n.*? ", " ", body)
+    
+#     # Remove anything within square brackets
+#     body = re.sub("\[.*?\]", " ", body)
+    
+#     # Remove any long string of underscores "__"
+#     body = re.sub("_+", " ", body)
+    
+#     # Remove disclaimers and similar, usually these are after a long space, or contains "This email was sent by"
+#     body = re.sub("\s{3,}.*This email was sent by.*", " ", body, flags=re.DOTALL)
+    
+#     # Remove any remaining URLs
+#     body = re.sub("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", " ", body)
+    
+#     # Remove email addresses
+#     body = re.sub('\S*@\S*\s?', ' ', body)
+    
+#     # Remove remaining non-word characters
+#     body = re.sub("\W", " ", body)
+    
+#     # Remove extra spaces
+#     body = re.sub("\s+", " ", body)
+    
+#     return body.strip()
+
+# # Assuming you have a DataFrame df with a 'body' column containing the emails
+# df['body_length'] = df['body'].apply(len)
+# df['cleaned_body'] = df['body'].apply(clean_email_body)
+# df['cleaned_body_length'] = df['cleaned_body'].apply(len)
+
+# # Now you can print and compare
+# with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.max_colwidth', -1):
+#     print(df[['body', 'cleaned_body', 'body_length', 'cleaned_body_length']])
 
 def clean_email_body(body):
     # Replace new line characters and following text until space
@@ -108,6 +144,12 @@ def clean_email_body(body):
     
     # Remove disclaimers and similar, usually these are after a long space, or contains "This email was sent by"
     body = re.sub("\s{3,}.*This email was sent by.*", " ", body, flags=re.DOTALL)
+    
+    # Remove specific disclaimer "If you received this email in error"
+    body = re.sub("If you received this email in error.*?future reference.", " ", body, flags=re.DOTALL)
+    
+    # Remove the similar disclaimer in another language
+    body = re.sub("Si vous avez reÃ§u ce courriel par erreur.*?rÃ©fÃ©rence.", " ", body, flags=re.DOTALL)
     
     # Remove any remaining URLs
     body = re.sub("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", " ", body)
@@ -123,13 +165,11 @@ def clean_email_body(body):
     
     return body.strip()
 
-# Assuming you have a DataFrame df with a 'body' column containing the emails
-df['body_length'] = df['body'].apply(len)
+# Update cleaned body and its length in the dataframe
 df['cleaned_body'] = df['body'].apply(clean_email_body)
 df['cleaned_body_length'] = df['cleaned_body'].apply(len)
 
 # Now you can print and compare
 with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.max_colwidth', -1):
     print(df[['body', 'cleaned_body', 'body_length', 'cleaned_body_length']])
-
 
