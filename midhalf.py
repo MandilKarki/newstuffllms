@@ -1,3 +1,54 @@
+import pandas as pd
+import re
+from email import policy
+from email.parser import BytesParser
+
+# Compiling the regular expressions for the disclaimers
+english_disclaimer = re.compile(r"If you received this email in error.*future reference", re.DOTALL)
+french_disclaimer = re.compile(r"Si vous avez reçu ce courriel par erreur.*titre de référence future", re.DOTALL)
+
+def clean_email(raw_email):
+    # Removing HTML tags
+    email_without_html = re.sub(r'<[^>]*?>', '', raw_email)
+
+    # Removing English and French disclaimers
+    cleaned_email = re.sub(english_disclaimer, '', email_without_html)
+    cleaned_email = re.sub(french_disclaimer, '', cleaned_email)
+
+    return cleaned_email.strip()
+
+def extract_email_info(raw_email_bytes):
+    msg = BytesParser(policy=policy.default).parsebytes(raw_email_bytes)
+    email_info = {
+        "From": msg['From'],
+        "To": msg['To'],
+        "Date": msg['Date'],
+        "Subject": msg['Subject'],
+        "Body": clean_email(msg.get_body(preferencelist=("plain")).get_content())
+    }
+    return email_info
+
+# Loading and cleaning the emails
+raw_emails = [email.encode() for email in df['emails']]
+cleaned_emails_info = [extract_email_info(raw_email) for raw_email in raw_emails]
+cleaned_emails_df = pd.DataFrame(cleaned_emails_info)
+
+# Adding the length of the body
+cleaned_emails_df['Body_length'] = cleaned_emails_df['Body'].apply(len)
+
+# Checking the first few cleaned emails
+for i, row in cleaned_emails_df.head().iterrows():
+    print('-'*50)
+    print(f"Email #{i+1}")
+    print('-'*50)
+    print(f"From: {row['From']}")
+    print(f"To: {row['To']}")
+    print(f"Date: {row['Date']}")
+    print(f"Subject: {row['Subject']}")
+    print(f"Body length before cleaning: {df.loc[i, 'Body_length']}")
+    print(f"Body length after cleaning: {row['Body_length']}")
+    print(f"Body: {row['Body']}\n")
+
 # import pandas as pd
 # from fuzzywuzzy import fuzz
 
