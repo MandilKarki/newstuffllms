@@ -29,3 +29,17 @@ df['classification_binary'] = df['classification'].apply(classify_text)
 
 # Print the dataframe to check the result
 print(df)
+
+def classify_text(text):
+    text = str(text).lower().strip() 
+    if 'not suspicious' in text:
+        return 0
+    elif 'suspicious' in text:
+        return 1
+    else:
+        return None  
+
+df['classification_binary'] = df['classification'].apply(classify_text)
+df['classification_binary'] = pd.to_numeric(df['classification_binary'], errors='coerce').fillna(0).astype(int)
+
+print(df)
