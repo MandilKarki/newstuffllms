@@ -1,0 +1,158 @@
+import pandas as pd
+import re
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+import transformers
+
+model_id = "C:/LLM/wizardvicuna"
+
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForCausalLM.from_pretrained(model_id)
+
+def text_splitter(text):
+    return text[:1950] if isinstance(text,str) else ' '
+
+def load_data(csv_file):
+    return pd.read_csv(csv_file)
+
+def preprocess_email(email):
+    return text_splitter(email).replace("\n", " ")
+
+pipeline = transformers.pipeline(
+    "text-generation",
+    model=model,
+    tokenizer=tokenizer,
+    device_map="auto",
+)
+
+def classify_email(email, subject, red_flag):
+    # Here we incorporate the 'subject' and 'Red Flag' into the prompt
+    prompt = f'''
+    [All the instructions and examples as you have given before]
+
+    Red Flag: {red_flag}
+    Subject: {subject}
+    Email Text: {email}
+    Classification:'''
+
+    sequences = pipeline(
+        text_inputs=prompt,
+        max_length=len(prompt) + 80,
+        do_sample=True,
+        top_k=10,
+        num_return_sequences=1,
+        eos_token_id=tokenizer.eos_token_id,
+    )
+
+    generated_text = sequences[0]["generated_text"]
+    classification = generated_text.split("Classification:")[-1].strip()
+
+    return classification
+
+def generate_output(df):
+    df["classification"] = df.apply(lambda row: classify_email(row["body"], row["subject"], row["Red Flag"]), axis=1)
+    return df
+
+def save_results(df, output_file):
+    df.to_csv(output_file, index=False)
+
+def main(csv_file, output_file):
+    df = load_data(csv_file)
+    df = generate_output(df)
+    save_results(df, output_file)
+
+if __name__ == "__main__":
+    csv_file = "cleaned_body (1).csv"
+    output_file = "SNSX3.csv"
+    main(csv_file, output_file)
+
+
+prompt1
+
+def classify_email(email, subject, red_flag):
+    prompt = f'''
+    Instruction: The task is to classify emails as either "Suspicious" or "Not suspicious" based on the content, subject, and 'Red Flag' field. 
+
+    Example 1:
+    Red Flag: False
+    Subject: Weekly Update
+    Email Text: "Hey team, please find attached our weekly financial update. Regards, Sarah."
+    Classification: Not suspicious
+
+    Example 2:
+    Red Flag: True
+    Subject: Personal Information
+    Email Text: "Hello, please find attached my updated contact details. Regards, John."
+    Classification: Not suspicious
+
+    Example 3:
+    Red Flag: True
+    Subject: File Request
+    Email Text: "Can you please send me the file we discussed in our meeting? Thanks."
+    Classification: Not suspicious
+
+    Red Flag: {red_flag}
+    Subject: {subject}
+    Email Text: {email}
+    Classification:'''
+
+
+prompt2
+
+def classify_email(email, subject, red_flag):
+    prompt = f'''
+    Instruction: Analyze the 'Red Flag', subject, and content of the email, and classify it as "Suspicious" or "Not suspicious".
+
+    Example 1:
+    Red Flag: False
+    Subject: Meeting Minutes
+    Email Text: "Attached are the minutes from our last team meeting. Let me know if you have any questions."
+    Classification: Not suspicious
+
+    Example 2:
+    Red Flag: True
+    Subject: Update on Client Project
+    Email Text: "Hey, here's an update on the client project. I've attached a spreadsheet with the details."
+    Classification: Suspicious
+
+    Example 3:
+    Red Flag: False
+    Subject: Coffee Catch-up
+    Email Text: "Hey, do you have time for a coffee catch-up tomorrow?"
+    Classification: Not suspicious
+
+    Red Flag: {red_flag}
+    Subject: {subject}
+    Email Text: {email}
+    Classification:'''
+
+
+prompt3 
+def classify_email(email, subject, red_flag):
+    prompt = f'''
+    Instruction: Your task is to determine whether the email is "Suspicious" or "Not suspicious" based on its subject, 'Red Flag' status, and content.
+
+    Example 1:
+    Red Flag: False
+    Subject: Vacation Plan
+    Email Text: "I'll be on vacation next week. In case of urgent issues, please contact my deputy."
+    Classification: Not suspicious
+
+    Example 2:
+    Red Flag: True
+    Subject: Report Attached
+    Email Text: "Find the attached report with updated figures. Let's discuss it in the next meeting."
+    Classification: Suspicious
+
+    Example 3:
+    Red Flag: False
+    Subject: Quick Check
+    Email Text: "Hey, just wanted to quickly check in and see how you're doing with the new project."
+    Classification: Not suspicious
+
+    Red Flag: {red_flag}
+    Subject: {subject}
+    Email Text: {email}
+    Classification:'''
+
+
