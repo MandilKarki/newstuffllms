@@ -9,16 +9,16 @@ res = generate_text('''
     To classify an email as either "Suspicious" or "Not suspicious", we would follow these steps:
 
     Step 1: Understand the Context:
-    We're trying to detect potential insider threats within the finance and banking sector by analyzing outbound emails. An insider threat refers to harmful or unauthorized actions taken by individuals within the organization.
+    We're trying to detect potential insider threats within the finance and banking sector by analyzing outbound emails. An insider threat refers to harmful or unauthorized actions taken by individuals within the organization. Notably, the outbound emails may not always be drastic in nature but subtle. The subtle ones might include sending client data, project information or company data to oneself for personal gains.
 
     Step 2: Analyze the 'Sent Self' Indicator:
     A 'Sent Self' indicator can mean that the sender of the email is the recipient as well. If it is True, we proceed with extra caution.
 
     Step 3: Inspect the Email Content and Subject:
-    We analyze the content and subject of the email for signs of insider threats. If the content or subject includes sensitive data, client-related information or company-related information, it's a potential threat and should be marked 'Suspicious'. However, personal information of the sender does not typically pose a risk, unless it includes information about other individuals.
+    We analyze the content and subject of the email for signs of insider threats. If the content or subject includes sensitive data, client-related information or company-related information, it's a potential threat and should be marked 'Suspicious'. Personal emails which may not be suspicious could include things like personal photos, tax information, event planning, etc. However, if these personal emails include information or documents related to someone else, they may be deemed suspicious.
 
     Step 4: Consider the Attachments:
-    Any attachments to the email should also be scrutinized for potentially sensitive data or suspicious content.
+    Any attachments to the email should also be scrutinized for potentially sensitive data or suspicious content. Personal attachments like CVs are generally not suspicious unless they are about someone else, which could indicate a data breach.
 
     Step 5: Analyze Emails with 'Sent Self' as False:
     If the 'Sent Self' is False, it means the recipient of the email is not the sender. These emails may be of lower risk, but we still analyze for signs of suspicious activity. 
@@ -56,13 +56,13 @@ res = generate_text('''
 
     # Reasoning:
 
-    Despite the 'Sent Self' flag being true, the content of the email is related to a summer camp, with no signs of insider threats. The subject and attachment further confirm the non-suspicious nature of the email.
+    This email is personal in nature, with the subject suggesting that it's related to summer camp forms. The content of the email does not indicate any signs of an insider threat, and the attachment appears to be related to the summer camp as well, reducing suspicions.
 
     # Question 3:
 
-    Subject: Customer Data Correction
+    Subject: Updated Customer Data
     Sent Self: False
-    Email Text: "Hey, While going through our records, I noticed a discrepancy in our customer data. I cross-referenced
+    Email Text: "Hi team, While going through our records, I noticed a discrepancy in our customer data. I cross-referenced
     it with our previous records and made the necessary changes. Please find attached the corrected file. Best, Sarah."
     Attachment: Corrected_Customer_Data.xlsx
 
@@ -89,6 +89,6 @@ res = generate_text('''
     # Reasoning:
 
     This email discusses sharing confidential financial reports for a price, which is a strong indicator of an insider threat. The subject and the attachment further raise suspicions as they deal with a 'Confidential Report'.
-    '''
-)
+
+''', max_length=1500, temperature=0.3)
 print(res[0]["generated_text"])
