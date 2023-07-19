@@ -1,0 +1,152 @@
+breaks down multi-step problems into intermediate steps, allowing the model to better perform complex reasoning tasks. 
+The strategy contrasts with standard prompting, which simply provides the model with input-output pairs and expects an immediate answer.
+
+  prompt = f'''
+
+# Instruction :
+
+Given the subject line, email body, any attachments, and the sender name, classify the email as "Suspicious" or "Not suspicious". The main task is to detect potential insider threats within the finance and banking sector by analyzing outbound emails. An insider threat refers to harmful or unauthorized actions taken by individuals within the organization. Notably, the outbound emails may not always be drastic in nature but subtle. The subtle ones might include sending client data, project information, or company data to oneself for personal gains.
+
+To classify an email as either "Suspicious" or "Not suspicious", we would follow these steps:
+
+Step 1: Analyze the subject line: Look for any indications of data exfiltration, such as mentions of 'client data', 'project information', 'internal', 'confidential', or other keywords that suggest sensitive information is being shared. This step helps in setting a preliminary context of the email content.
+
+Step 2: Analyze the email body: If available, study the content to gauge any subtle signs of data leakage and insider threats. This can be communication about business processes or information about the bank or business. However, in the absence of a body, we must critically evaluate other components of the email.
+
+Step 3: Analyze the attachments: Review each document for potential signs of insider threats. Attachments containing sensitive data, client-related information, or company-related information signal a potential threat. Personal emails including the sender's own data like photos, tax information, event planning, etc., are generally not suspicious unless they contain someone else's data.
+
+Step 4: Analyze the sender: The identity of the sender can provide critical information. If the sender's name and the content of the attachments do not match, it might indicate suspicious activity. Conversely, if they do match, the email is generally deemed not suspicious.
+
+With this understanding, we now apply these steps to the following examples:
+
+Example 1:
+Subject: docs
+Body: not available
+Attachments: ['2022-im-ba-intern-en (2).docx', '2023 Q1.docx', 'IFSE Certificate of completion.pdf', 'NIR 2022.zip', 'PDA account opening comment.txt', 'PR cc application notes credit wizard.docx', 'lift-your-performance-skills', 'Home.aspx', 'SDB Drilling Approval Request Checklist EN Jan 2023.docx']
+Sender: akram.elmoussawi@rbc.com
+
+# Reasoning:
+Step 1: The subject line "docs" indicates documents might be involved, yet it doesn't provide explicit signs of data exfiltration.
+Step 2: Since the body is not available, we can't evaluate this step and proceed to the next.
+Step 3: The attachments include some files which seem to be internal or business-related, potentially indicating data leakage.
+Step 4: The sender name does not seem to be directly linked to the attachment content, enhancing the suspicion level.
+
+# Classification: 
+
+Example 2:
+Subject: deck
+Body: not available
+Attachments: ['MaRS_WIC_Capital Strategy_June 2023.pptx']
+Sender: lauren.mcguire@rbc.com
+
+# Reasoning:
+Step 1: The subject "deck" suggests the involvement of a presentation, not necessarily a sign of data exfiltration.
+Step 2: The body is not available, leading us to rely on other email aspects.
+Step 3: The attachment name suggests it's an internal document pertaining to capital strategy, potentially sensitive.
+Step 4: The sender's name and the content of the attachment don't seem to align, making it potentially suspicious.
+
+# Classification:
+
+Example 3:
+Subject: Stamped
+Body: Thanks and regards Kendra Ann Louis Senior Manager Corporate Communication Caribbean Sales Enablement Strategic Communication RBC Financial Caribbean Limited T 868 612 6729 Fourth Floor East St Clair Place St Clair Trinidad and Tobago W I Please only print this e mail if entirely necessary This email may be privileged and or confidential and the sender does not waive any related rights and obligations Any distribution use or copying of this email or the information it contains by other than an intended recipient is unauthorized If you received this email in error please advise the sender by return email or otherwise immediately You have consented to receive the attached electronically at the above noted address please retain a copy of this confirmation for future reference.
+Attachments:  ['Kendra-Ann Louis job letter with affidavit stamp.pdf', "Kendra-Ann Louis ID and driver's permit with affidavit stamp.pdf", 'Jenisse Louis ID card and Birth cert with affidavit stamp.pdf']
+Sender: kendra-ann.louis@rbc.com
+
+# Reasoning:
+Step 1: The subject "Stamped" does not indicate data exfiltration.
+Step 2: The body of the email is extensive but does not reveal any insider threat.
+Step 3: The attachments are personal documents, seemingly associated with the sender's identity.
+Step 4: The sender's name matches the names in the attachments, suggesting the email is not suspicious.
+
+# Classification: 
+'''
+
+
+
+  '''
+  prompt = f'''
+
+    # Instruction :
+
+    Your task is to analyze an outbound email from within a finance or banking organization and classify it as either "Suspicious" or "Not Suspicious". The aim of this classification is to detect potential insider threats, instances where an individual within the organization performs harmful or unauthorized actions. Remember, the outbound emails may contain both blatant and subtle indications of such a threat. An example could be sensitive client data, project information, or internal company data that the sender may be trying to leverage for personal gains. This classification follows these steps:
+
+    Step 1: Analyze the Subject Line: Inspect the subject line for any hints of data exfiltration. This will not only involve looking for explicit keywords such as 'client data', 'project information', 'internal', 'confidential', but also subtler signs. For instance, pay attention to overly generic or nonspecific subjects, subjects that don't align with the email body, or subjects that contain unconventional abbreviations or codenames, which could potentially be used to mask sensitive information.
+
+    Step 2: Examine the Email Body: Carefully scrutinize the email body for any signs of data leakage or insider threat. This includes discussions about sensitive business processes or proprietary company-specific information. Pay particular attention to explicit mentions of sharing or transferring such information.
+
+    Step 3: Evaluate the Attachments: Check if the attachment includes sensitive data, client-related information, or company-related information. Non-professional attachments, such as personal photos or unrelated documents, may not be suspicious unless they pertain to someone else, indicating a potential data breach. 
+
+    Step 4: Consider the Sender: Cross-check if the sender's name and the content in the attachments match. If there's a match, it suggests the data pertains to the sender and may not be suspicious. However, a mismatch could suggest a potential threat.
+
+    Based on these steps, classify the email as "Suspicious" or "Not Suspicious".
+    '''
+
+
+      Example 1:
+
+Subject: docs
+
+Body: not available
+
+Attachments: ['2022-im-ba-intern-en (2).docx', '2023 Q1.docx', 'IFSE Certificate of completion.pdf', 'NIR 2022.zip', 'PDA account opening comment.txt', 'PR cc application notes credit wizard.docx', 'lift-your-performance-skills', 'Home.aspx', 'SDB Drilling Approval Request Checklist EN Jan 2023.docx']
+
+Sender: akram.elmoussawi@rbc.com
+
+# Reasoning
+
+Step 1: The subject, 'docs', suggests documents attached, although this generic term doesn't provide specific details about the nature of these documents.
+
+Step 2: With the body of the email unavailable, our analysis relies on the examination of the attached documents.
+
+Step 3: Several attachments indicate potentially sensitive or internal information (e.g., '2023 Q1.docx', 'IFSE Certificate of completion.pdf', 'NIR 2022.zip', 'PDA account opening comment.txt', 'PR cc application notes credit wizard.docx', 'SDB Drilling Approval Request Checklist EN Jan 2023.docx'), pointing towards a suspicious activity.
+
+Step 4: Matching the sender's name with the attachment names reveals no personal correlation, reinforcing the suspicion.
+
+# Classification: Suspicious
+
+
+  Example 2:
+
+Subject: deck
+
+Body: not available
+
+Attachments: ['MaRS_WIC_Capital Strategy_June 2023.pptx']
+
+Sender: lauren.mcguire@rbc.com
+
+# Reasoning
+
+Step 1: The subject, 'deck', implies a PowerPoint presentation.
+
+Step 2: With the body unavailable, the primary focus shifts to the PowerPoint attachment.
+
+Step 3: The attachment 'MaRS_WIC_Capital Strategy_June 2023.pptx' appears to be an internal document detailing capital strategy, which should typically not be shared outside the organization.
+
+Step 4: Despite the sender's name not being in the attachment, the nature of the document suggests a potential insider threat.
+
+# Classification: Suspicious
+
+
+  Example 3:
+
+Subject: Stamped
+
+Body: Thanks and regards Kendra Ann Louis Senior Manager Corporate Communication Caribbean Sales Enablement Strategic Communication RBC Financial Caribbean Limited T 868 612 6729 Fourth Floor East St Clair Place St Clair Trinidad and Tobago W I Please only print this e mail if entirely necessary This email may be privileged and or confidential and the sender does not waive any related rights and obligations Any distribution use or copying of this email or the information it contains by other than an intended recipient is unauthorized If you received this email in error please advise the sender by return email or otherwise immediately You have consented to receive the attached electronically at the above noted address please retain a copy of this confirmation for future reference.
+
+Attachments:  ['Kendra-Ann Louis job letter with affidavit stamp.pdf', "Kendra-Ann Louis ID and driver's permit with affidavit stamp.pdf", 'Jenisse Louis ID card and Birth cert with affidavit stamp.pdf']
+
+Sender: kendra-ann.louis@rbc.com
+
+# Reasoning
+
+Step 1: The subject 'Stamped' is likely related to the attached documents, possibly referring to the legal process of document verification via stamping.
+
+Step 2: The body of the email contains a standard signature and disclaimer from the sender, indicating professional communication.
+
+Step 3: Attachments consist of personal documents bearing the sender's name, implying they relate to the sender's personal or professional matters.
+
+Step 4: A match between the sender's name and the names in the attachments suggests the information pertains to the sender themselves, reducing the likelihood of suspicious activity.
+
+# Classification: Not Suspicious
