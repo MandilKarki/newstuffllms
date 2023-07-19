@@ -229,3 +229,39 @@ Step 4: Since the recipient is not within the company and the email contains per
 # Classification: Not Suspicious
 '''
 
+
+
+v1:
+Step 1: Analyze the subject line: Look for any indications of data exfiltration, such as mentions of 'client data', 'project information', 'internal', 'confidential', or other keywords that suggest sensitive information is being shared.
+
+v2:
+Step 1: Analyze the subject line: Look for any indications of sensitive information that should not be shared with the recipient, such as keywords that suggest confidential or proprietary data.
+
+    In v1, the focus is on detecting signs of data exfiltration, which implies the sender may be sharing sensitive information with themselves. In v2, the focus is on identifying sensitive information that should not be shared with the recipient.
+
+v1:
+Step 2: Look for any signs of data leakage and insider threat in the body, usually this will be communication about business processes, and information about bank or business or something similar.
+
+v2:
+Step 2: Examine the email body for any content that may contain confidential or client-related information that should not be shared with the recipient.
+
+    In v1, the emphasis is on identifying data leakage and insider threat within the email body, particularly related to business processes and sensitive information. In v2, the emphasis is on evaluating the email body for any content that should be kept confidential and not shared with the recipient.
+
+v1:
+Step 3: Analyze the attachment for signs of insider threats. If the attachment includes sensitive data, client-related information, or company-related information, it's a potential threat and should be marked 'Suspicious'.
+
+v2:
+Step 3: Assess the attachments for any sensitive data, client-related information, or proprietary information that should not be shared with the recipient.
+
+    In v1, the focus is on identifying insider threats by analyzing the attachments for sensitive or client-related information. In v2, the focus is on assessing the attachments for any data that should be kept confidential and not shared with the recipient.
+
+v1:
+Step 4: Consider the Sender: Look for if the sender name and the attachment content matches or not. If it matches, it means the data is about themselves and not suspicious. However, if it doesn't, it might be suspicious.
+
+v2:
+Step 4: Consider the Recipient: Determine if the content of the email and attachments is appropriate to be shared with the intended recipient.
+
+    In v1, the consideration is on matching the sender name with the attachment content to determine if it's about themselves or someone else, which affects the suspiciousness. In v2, the consideration is on assessing if the email content and attachments are suitable for sharing with the specific recipient.
+
+Overall, the differences in the prompts lie in the specific criteria, keywords, and considerations used to determine the suspiciousness of the email based on the sender's access to client data and the intended recipient.
+
