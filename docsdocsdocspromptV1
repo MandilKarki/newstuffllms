@@ -150,3 +150,82 @@ Step 3: Attachments consist of personal documents bearing the sender's name, imp
 Step 4: A match between the sender's name and the names in the attachments suggests the information pertains to the sender themselves, reducing the likelihood of suspicious activity.
 
 # Classification: Not Suspicious
+
+
+#############################################################
+The main difference between prompt version 1 (v1) and prompt version 2 (v2) is the focus on different scenarios or contexts.
+
+In v1, the prompt is designed for the case where the email is sent to oneself and the sender has access to client data. The steps and reasoning in the prompt revolve around analyzing the subject line, body, attachments, and sender name to determine if the email is suspicious or not.
+
+In v2, the prompt is tailored for the case where the email is sent to others and the sender does not have access to client data. The steps and reasoning in the prompt are adjusted to consider the recipient's permissions and whether the email contains sensitive information that should not be shared with the recipient.
+
+Overall, the difference lies in the specific scenarios and considerations involved in classifying emails as suspicious or not based on the sender's access to client data and the intended recipient.
+
+prompt_case2 = '''
+# Instruction: 
+
+Given the subject line, email body, attachments, the sender, and the recipient of the email, classify the email as "Suspicious" or "Not suspicious". 
+
+The main task is to detect potential unauthorized actions taken by individuals within the organization. Notably, the outbound emails may not always be drastic in nature but subtle. The subtle ones might include sending client data, project information or company data to individuals who do not have the necessary permissions to access such data.
+
+To classify an email as either "Suspicious" or "Not suspicious", we would follow these steps:
+
+Step 1: Analyze the subject line: Look for any indications of unauthorized data sharing, such as mentions of 'client data', 'project information', 'internal', 'confidential', or other keywords that suggest sensitive information is being shared.
+
+Step 2: Examine the body of the email: Look for any signs of unauthorized data sharing in the body of the email. This could be communication about business processes, information about the bank or business, or something similar. 
+
+Step 3: Analyze the attachments: If the attachment includes sensitive data, client-related information or company-related information that the recipient should not have access to, it's a potential threat and should be marked 'Suspicious'.
+
+Step 4: Consider the sender and recipient: Check if the recipient has the necessary permissions to access the data being shared. If the recipient is not authorized to receive such data, the email is suspicious. 
+
+# Examples:
+
+Example 1:
+
+Subject: Client Information Update
+Body: Please review the attached client information update document.
+Attachments: ['client_update.docx']
+Sender: john.doe@rbc.com
+Recipient: jane.smith@rbc.com
+
+# Reasoning
+
+Step 1: The subject line mentions 'Client Information Update', which suggests the email may contain sensitive client data.
+Step 2: The body indicates that there is an attached document related to the client information update.
+Step 3: The attachment 'client_update.docx' likely contains client-related information.
+Step 4: Since the recipient is within the company and deals with client information, it is not suspicious.
+# Classification: Not Suspicious
+
+Example 2:
+
+Subject: Internal Budget Review
+Body: Attached is the internal budget review presentation for your reference.
+Attachments: ['budget_review.pptx']
+Sender: sarah.miller@rbc.com
+Recipient: david.brown@rbc.com
+
+# Reasoning
+
+Step 1: The subject line mentions 'Internal Budget Review', which suggests the email may contain internal financial information.
+Step 2: The body indicates that there is an attached presentation related to the internal budget review.
+Step 3: The attachment 'budget_review.pptx' likely contains internal financial information.
+Step 4: Since both the sender and recipient are within the company and have access to internal financial information, it is not suspicious.
+# Classification: Not Suspicious
+
+Example 3:
+
+Subject: Personal Photos
+Body: Sharing some photos from our vacation. Enjoy!
+Attachments: ['vacation_photos.zip']
+Sender: alice.wonder@rbc.com
+Recipient: michael.jones@gmail.com
+
+# Reasoning
+
+Step 1: The subject line mentions 'Personal Photos', indicating that the email contains personal content.
+Step 2: The body indicates that there is a zip file attached with vacation photos.
+Step 3: The attachment 'vacation_photos.zip' likely contains personal photos.
+Step 4: Since the recipient is not within the company and the email contains personal content, it is not suspicious.
+# Classification: Not Suspicious
+'''
+
