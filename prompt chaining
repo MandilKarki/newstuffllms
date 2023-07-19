@@ -1,0 +1,27 @@
+Prompt chaining is an approach that involves breaking down the problem into a series of sequential prompts or reasoning steps. 
+Each prompt builds upon the previous one, allowing the model to perform step-by-step reasoning and arrive at a classification decision.
+It mimics a chain of thought process, enabling the model to consider multiple factors and make informed judgments.
+
+Business Use Case:
+The business use case for prompt chaining in email classification is to enhance the accuracy and efficiency of identifying potential insider threats. By leveraging prompt chaining, organizations can automate the email classification process, reducing the manual effort required for manual inspection. This approach enables timely identification of suspicious emails, allowing for proactive measures to mitigate risks and ensure data security.
+
+
+
+
+Prompt chaining can be applied to the use case of classifying emails as suspicious or not suspicious based on various factors. Here are some examples of prompt chaining that can be used:
+
+    Basic Prompt Chaining:
+        Prompt 1: Analyze the subject line: Look for any indications of data exfiltration, such as mentions of 'client data', 'project information', 'internal', 'confidential', or other keywords that suggest sensitive information is being shared.
+        Prompt 2: Analyze the body of the email: Look for any signs of data leakage and insider threats, such as communication about business processes, bank information, or other sensitive details.
+        Prompt 3: Analyze the attachments: Check if the attachments include sensitive data, client-related information, or company-related information. If so, consider it a potential threat.
+        Prompt 4: Consider the sender: Check if the sender's name matches the attachment content. If it matches, it indicates that the data is about themselves and may not be suspicious.
+
+    Advanced Prompt Chaining:
+        Prompt 1: Analyze the subject line and body of the email to identify any indications of data exfiltration or insider threats.
+        Prompt 2: Analyze the attachments to check for any sensitive data or client-related information. If found, mark it as potentially suspicious.
+        Prompt 3: Consider the sender's name and compare it with the attachment names. If there is a mismatch, it might indicate a suspicious activity.
+        Prompt 4: Analyze the language and tone of the email. Look for any unusual or suspicious patterns in the content.
+        Prompt 5: Apply natural language processing techniques to identify keywords or phrases associated with insider threats or data breaches.
+        Prompt 6: Consider the time and context of the email. If it is sent during non-business hours or from an unexpected location, it might raise suspicions.
+
+These prompt chains can be applied sequentially, with each prompt building upon the previous one to arrive at a classification decision. By considering multiple factors and incorporating reasoning steps, prompt chaining enhances the accuracy and reliability of the classification process.
