@@ -1,0 +1,49 @@
+def classify_email(email, subject, attachments):
+
+    prompt = f'''
+    {{
+        "instruction": "Classify the email as 'Suspicious' or 'Not suspicious' based on potential insider threats within the finance and banking sector.",
+        "data": {{
+            "subject": "{subject}",
+            "body": "{email}",
+            "attachments": {attachments}
+        }},
+        "examples": [
+            {{
+                "data": {{
+                    "subject": "docs",
+                    "body": "not available",
+                    "attachments": ['2022-im-ba-intern-en (2).docx', '2023 Q1.docx', 'IFSE Certificate of completion.pdf', 'NIR 2022.zip', 'PDA account opening comment.txt', 'PR cc application notes credit wizard.docx', 'lift-your-performance-skills', 'Home.aspx', 'SDB Drilling Approval Request Checklist EN Jan 2023.docx']
+                }},
+                "reasoning": "Subject mentions 'docs' indicating documents. The body is not available, so attachments are checked. Some attachments look suspicious.",
+                "classification": "Suspicious"
+            }},
+            {{
+                "data": {{
+                    "subject": "deck",
+                    "body": "not available",
+                    "attachments": ['MaRS_WIC_Capital Strategy_June 2023.pptx']
+                }},
+                "reasoning": "The subject is 'deck', likely a PowerPoint. The body is unavailable. The attachment has a title indicating it's an internal strategic document.",
+                "classification": "Suspicious"
+            }},
+            {{
+                "data": {{
+                    "subject": "Stamped",
+                    "body": "Thanks and regards Senior Manager ... W I Please only print this e mail if entirely necessary ...",
+                    "attachments": ['Anthony Louis job letter with affidavit stamp.pdf', "Ann Louis ID and driver's permit with affidavit stamp.pdf", 'Jenisse Louis ID card and Birth cert with affidavit stamp.pdf']
+                }},
+                "reasoning": "The subject indicates something being stamped. The body contains a signature and disclaimer. Attachments include personal documents.",
+                "classification": "Not Suspicious"
+            }}
+        ],
+        "response": {{
+            "data": {{
+                "subject": "{subject}",
+                "body": "{email}",
+                "attachments": {attachments}
+            }},
+            "reasoning": "Step 1:"
+        }}
+    }}
+    '''
