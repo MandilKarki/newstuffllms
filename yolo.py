@@ -1,3 +1,29 @@
+Hello [Recruiter's Name],
+
+I hope this message finds you well. As my co-op is concluding in a week, I've been reflecting on my journey here and am eager to continue contributing to our company in a full-time capacity. I recently came across the [specific role name] position, and I'm genuinely excited about the opportunities it presents. My experience during the co-op and my passion for [specific aspect of the role or field] make me believe that I could be a strong fit for this role.
+
+I would truly appreciate the chance to discuss this opportunity further and understand how I can align my skills with the team's goals. Please let me know a convenient time for you, and we can schedule a conversation.
+
+Thank you for considering my interest, and I'm looking forward to our discussion.
+
+Warm regards,
+
+[Your Name]
+[Your Current Role]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Rename classification columns
 df1 = df1.rename(columns={"classification": "classification_model1"})
 df2 = df2.rename(columns={"classification": "classification_model2"})
