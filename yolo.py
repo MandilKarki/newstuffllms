@@ -1,3 +1,26 @@
+import pandas as pd
+
+# 1. Load the datasets
+df1 = pd.read_csv("path_to_dataset1.csv")
+df2 = pd.read_csv("path_to_dataset2.csv")
+df3 = pd.read_csv("path_to_dataset3.csv")
+
+# 2. Join the datasets using an 'id' column
+dfs = df1[['id', 'classification']].merge(df2[['id', 'classification']], on='id', suffixes=('_model1', '_model2'))
+dfs = dfs.merge(df3[['id', 'classification']], on='id')
+dfs.rename(columns={'classification': 'classification_model3'}, inplace=True)
+
+# 3. Determine the majority vote
+def majority_vote(row):
+    classifications = [row['classification_model1'], row['classification_model2'], row['classification_model3']]
+    return "Suspicious" if classifications.count("Suspicious") >= 2 else "Not Suspicious"
+
+dfs['majority_classification'] = dfs.apply(majority_vote, axis=1)
+
+# 4. Save the results with the original classifications and the majority vote
+dfs.to_csv("result_dataset.csv", index=False)
+
+
 import re
 
 def extract_classification(text):
