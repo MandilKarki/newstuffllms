@@ -1,18 +1,36 @@
-import csv
-from transformers import TextGenerationPipeline, GPTNeoForCausalLM, GPT2Tokenizer
+import pandas as pd
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import transformers
 
-# Setting up the model and tokenizer
-model_name = "EleutherAI/gpt-neo-2.7B"
-model = GPTNeoForCausalLM.from_pretrained(model_name)
-tokenizer = GPT2Tokenizer.from_pretrained(model_name)
-pipeline = TextGenerationPipeline(model=model, tokenizer=tokenizer, device=0)  # Use device=0 for GPU
+# Loading model weights directory
+model_id = "C:/LLM/wizardvicuna"
 
-def extract_from_response(response, keyword):
-    lines = response.split("\n")
-    for line in lines:
-        if line.startswith(keyword):
-            return line.split(":")[1].strip()
-    return ""
+# Loading model and tokenizer
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForCausalLM.from_pretrained(model_id)
+
+# Initialising model
+pipeline = transformers.pipeline(
+    "text-generation",
+    model=model,
+    tokenizer=tokenizer,
+    device=0  # Assuming you're using GPU. If CPU, set to -1
+)
+print("Pipeline initiated")
+
+def text_splitter(text):
+    return text[:1950] if isinstance(text, str) else ' '
+
+def load_data(csv_file):
+    return pd.read_csv(csv_file)
+
+def preprocess_email(email):
+    return text_splitter(email).replace("\n", " ")
+
+def extract_from_response(response, tag):
+    start = response.find(f"{tag}:") + len(tag) + 1
+    end = response.find("\n", start)
+    return response[start:end].strip()
 
 def classify_email(email, subject, attachments):
     # In-context Learning for the given domain
@@ -84,21 +102,21 @@ def classify_email(email, subject, attachments):
 
     return classification
 
-def main(input_csv, output_csv):
-    with open(input_csv, mode='r') as csv_file:
-        csv_reader = csv.DictReader(csv_file)
-        with open(output_csv, mode='w') as csv_out:
-            fieldnames = ["Email", "Subject", "Attachments", "Classification"]
-            writer = csv.DictWriter(csv_out, fieldnames=fieldnames)
-            writer.writeheader()
-            for row in csv_reader:
-                email = row["Email"]
-                subject = row["Subject"]
-                attachments = row["Attachments"]
-                classification = classify_email(email, subject, attachments)
-                writer.writerow({"Email": email, "Subject": subject, "Attachments": attachments, "Classification": classification})
+def generate_output(df):
+    df["classification"] = df.apply(
+        lambda row: classify_email(row["cleaned_body"], row["messageSubject"], row["attachments"]), axis=1)
+    return df
+
+def save_results(df, output_file):
+    df.to_csv(output_file, index=False)
+
+def main(csv_file, output_file):
+    df = load_data(csv_file)  # loading csv files for input batch
+    print("Data loaded...")
+    df = generate_output(df)  # model prediction
+    save_results(df, output_file)  # save results to a excel file
 
 if __name__ == "__main__":
-    input_file = "path_to_input.csv"  # Replace with your file path
-    output_file = "path_to_output.csv"  # Replace with desired output path
-    main(input_file, output_file)
+    csv_file = "C:\LLM\August\A16august.csv"
+    output_file = "resultsAugust16.csv"
+    main(csv_file, output_file)
