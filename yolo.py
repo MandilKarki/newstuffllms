@@ -1,5 +1,33 @@
 import pandas as pd
 
+# Assuming you've already read your dataframes
+# df1 = pd.read_csv("path_to_dataset1.csv")
+# df2 = pd.read_csv("path_to_dataset2.csv")
+# df3 = pd.read_csv("path_to_dataset3.csv")
+
+# Renaming classification columns before merging
+df1 = df1.rename(columns={"classification": "classification_model1"})
+df2 = df2.rename(columns={"classification": "classification_model2"})
+df3 = df3.rename(columns={"classification": "classification_model3"})
+
+# Merge on the ID column, defaulting to 'col_0' here
+merged_df = df1.merge(df2, on="col_0", how="outer")
+merged_df = merged_df.merge(df3, on="col_0", how="outer")
+
+# Majority classification calculation
+merged_df['majority_classification'] = merged_df.apply(lambda row: 'Suspicious' 
+                                        if sum([row['classification_model1'] == 'Suspicious', 
+                                                row['classification_model2'] == 'Suspicious', 
+                                                row['classification_model3'] == 'Suspicious']) >= 2 
+                                        else 'Not Suspicious', axis=1)
+
+# Save the resulting dataframe
+merged_df.to_csv('merged_results.csv', index=False)
+
+
+
+import pandas as pd
+
 # Load your datasets
 df1 = pd.read_csv("path_to_dataset1.csv")
 df2 = pd.read_csv("path_to_dataset2.csv")
