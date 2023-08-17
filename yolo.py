@@ -1,3 +1,23 @@
+# Rename classification columns
+df1 = df1.rename(columns={"classification": "classification_model1"})
+df2 = df2.rename(columns={"classification": "classification_model2"})
+df3 = df3.rename(columns={"classification": "classification_model3"})
+
+# Merge datasets based on common columns
+merged_df = df1.merge(df2, on=list(df1.columns.difference(['classification_model1'])))
+merged_df = merged_df.merge(df3, on=list(df1.columns.difference(['classification_model1', 'classification_model2'])))
+
+# Determine the majority classification
+merged_df['majority_classification'] = (merged_df[['classification_model1', 'classification_model2', 'classification_model3']] == 'Suspicious').sum(axis=1)
+merged_df['majority_classification'] = merged_df['majority_classification'].apply(lambda x: 'Suspicious' if x >= 2 else 'Not Suspicious')
+
+# Save to new csv
+merged_df.to_csv('merged_results.csv', index=False)
+
+
+
+
+33333333333333333
 import pandas as pd
 
 # Assuming you've already read your dataframes
