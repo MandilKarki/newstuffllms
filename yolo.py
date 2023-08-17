@@ -1,3 +1,26 @@
+import re
+
+def extract_classification(text):
+    pattern = r'### Response.*?Classification:\s*(\w+)'
+    match = re.search(pattern, text, re.DOTALL)
+    return match.group(1) if match else None
+
+# Test
+text = '''
+### Some other text
+Random content
+### Response
+Subject: some_subject
+Body: some_email
+Attachments: some_attachments
+Classification: Suspicious
+'''
+
+print(extract_classification(text))  # Output: Suspicious
+df['classification'] = df['generated_text'].apply(extract_classification)
+
+
+
 import pandas as pd
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import transformers
