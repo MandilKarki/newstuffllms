@@ -1,5 +1,33 @@
 import pandas as pd
 
+# Load your datasets
+df1 = pd.read_csv("path_to_dataset1.csv")
+df2 = pd.read_csv("path_to_dataset2.csv")
+df3 = pd.read_csv("path_to_dataset3.csv")
+
+# Merge based on col_0, keeping all columns
+merged_df = df1.merge(df2, on="col_0", how="outer", suffixes=('_model1', '_model2'))
+merged_df = merged_df.merge(df3, on="col_0", how="outer")
+
+# If 'classification' column exists in df3, rename it for clarity
+if 'classification' in merged_df.columns:
+    merged_df.rename(columns={'classification': 'classification_model3'}, inplace=True)
+
+def get_majority_class(row):
+    count_suspicious = sum([row.get('classification_model1', "") == "Suspicious", 
+                            row.get('classification_model2', "") == "Suspicious", 
+                            row.get('classification_model3', "") == "Suspicious"])
+
+    return "Suspicious" if count_suspicious > 1 else "Not Suspicious"
+
+merged_df['majority_classification'] = merged_df.apply(get_majority_class, axis=1)
+
+# Save the merged DataFrame with majority classifications and all columns to a new CSV
+merged_df.to_csv("merged_results.csv", index=False)
+
+
+import pandas as pd
+
 # 1. Load the datasets
 df1 = pd.read_csv("path_to_dataset1.csv")
 df2 = pd.read_csv("path_to_dataset2.csv")
