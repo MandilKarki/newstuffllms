@@ -1,3 +1,37 @@
+import pandas as pd
+
+# Sample data
+df = pd.read_csv('your_data.csv')
+
+# Assuming each segment is of length 17 (as per your description)
+length_of_segment = 17
+
+# Split the dataframe into three segments
+df1 = df.iloc[:length_of_segment]
+df2 = df.iloc[length_of_segment:2*length_of_segment]
+df3 = df.iloc[2*length_of_segment:3*length_of_segment]
+
+# Rename classification columns
+df1 = df1.rename(columns={"classification": "classification1"})
+df2 = df2.rename(columns={"classification": "classification2"})
+df3 = df3.rename(columns={"classification": "classification3"})
+
+# Reset index for merging
+df1, df2, df3 = df1.reset_index(drop=True), df2.reset_index(drop=True), df3.reset_index(drop=True)
+
+# Merging dataframes based on index
+merged_df = pd.concat([df1, df2['classification2'], df3['classification3']], axis=1)
+
+# Determine the majority classification
+def get_majority_class(row):
+    count_suspicious = sum([row['classification1'] == 'Suspicious', row['classification2'] == 'Suspicious', row['classification3'] == 'Suspicious'])
+    return 'Suspicious' if count_suspicious >= 2 else 'Not Suspicious'
+
+merged_df['majority_classification'] = merged_df.apply(get_majority_class, axis=1)
+
+print(merged_df)
+
+
 import re
 
 def extract_classification(text):
