@@ -1,3 +1,31 @@
+import re
+
+def extract_classification(text):
+    pattern = r'### Response.*?Classification:\s*(\w+)'
+    match = re.search(pattern, text, re.DOTALL)
+    return match.group(1) if match else None
+
+def classify_email(email, subject, red_flag, attachments, networkSenderIdentifier):
+    # ... [rest of the function]
+
+    # After generating the text:
+    print("generatingtext")
+    generated_text = sequences[0]["generated_text"]
+    print(generated_text)
+
+    # Extracting the classification using your function
+    classification = extract_classification(generated_text)
+
+    return classification, generated_text  # Return both values
+
+def generate_output(df):
+    # Apply the function and split the results into two new columns
+    df["classification"], df["generated_text"] = zip(*df.apply(lambda row: classify_email(row["cleaned_body"], row["messageSubject"], row["self_sent"], row["attachments"], row["networkSenderIdentifier"]), axis=1))
+    return df
+
+
+
+
 Hello [Recruiter's Name],
 
 I hope this message finds you well. As my co-op is concluding in a week, I've been reflecting on my journey here and am eager to continue contributing to our company in a full-time capacity. I recently came across the [specific role name] position, and I'm genuinely excited about the opportunities it presents. My experience during the co-op and my passion for [specific aspect of the role or field] make me believe that I could be a strong fit for this role.
