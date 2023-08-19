@@ -1,3 +1,37 @@
+# Prompt for Chain One: Identify if the email content is suspicious or not.
+initial_analysis_prompt = """
+You are an AI trained in cybersecurity and phishing detection. Using your training data and understanding, analyze the following email content:
+\n\nEmail Content:\n{email_content}
+\nProvide a detailed analysis. If it's suspicious, state reasons. If not, provide an assurance. The email is: {analysis_result}.
+"""
+chain_one_prompt = PromptTemplate(
+    input_variables=["email_content"],
+    template=initial_analysis_prompt
+)
+chain_one = LLMChain(llm=llm, prompt=chain_one_prompt)
+
+# Prompt for Chain Two: Provide steps for protection based on the previous analysis.
+follow_up_prompt = """
+Building upon our previous analysis: "The email is: {analysis_result}." Provide a series of steps the user should follow. If the statement suggests the email was suspicious, provide protection measures. If the statement suggests the email was not suspicious, provide general email safety tips.
+"""
+chain_two_prompt = PromptTemplate(
+    input_variables=["analysis_result"],
+    template=follow_up_prompt
+)
+chain_two = LLMChain(llm=llm, prompt=chain_two_prompt)
+
+# Sequential Chaining
+overall_chain = SequentialChain(
+    input_variables=["email_content"], 
+    chains=[chain_one, chain_two], 
+    verbose=True
+)
+
+# Run the overall chain with a sample email content
+email_sample = """Dear user, We noticed unusual activity on your account. Please click this link to verify your identity."""
+result = overall_chain.run(email_sample)
+print(result)
+
 import os
 from langchain.llms import OpenAI
 from langchain.chains import LLMChain
