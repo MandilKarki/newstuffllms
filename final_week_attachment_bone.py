@@ -1,3 +1,24 @@
+Case 1: Email sent to oneself with client data
+
+Prompt: "Analyze an email sent to {selfEmail} containing the subject {subject}, body {email}, and attachments {attachments}. Given that this email is sent to oneself and contains potential client data, determine if there's evidence of insider threats or unauthorized data handling."
+
+Case 2: Email sent to others with client data
+
+Prompt: "Review an email sent to {recipientEmail} from {senderEmail} with the subject {subject}, body {email}, and attachments {attachments}. Given that this email is sent to another individual and carries possible client data, assess if there's a sign of data exfiltration or suspicious behavior."
+
+Case 3: Email sent to oneself without sensitive information
+
+Prompt: "Examine an email sent to {selfEmail} having the subject {subject}, body {email}, and attachments {attachments}. Considering this email is for personal reference and lacks sensitive information, evaluate if there's any potential risk or subtle signs of malicious intent."
+
+Case 4: Email sent to others without client data
+
+Prompt: "Analyze an email directed to {recipientEmail} from {senderEmail} with the subject {subject}, body {email}, and attachments {attachments}. Given that this email is sent externally but doesn't seem to contain sensitive client data, determine if there are any hidden indications of insider threats."
+
+
+
+
+
+
 import pandas as pd
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import transformers
